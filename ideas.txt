@@ -1,0 +1,9 @@
+use paper type arg - > qp or ms  _/
+if arg = question paper give the question paper list _/
+if arg = marking scheme give the marking scheme list _/
+sort by month _/
+store in dictionary (in progress) _/
+
+notes:
+Total 18 papers
+
