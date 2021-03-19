@@ -39,7 +39,6 @@ def scrape(exmType, subject, code, year, ptype, month):
     global url
     url = (f"https://papers.gceguide.com/{Converter(exmType)}/{subject.capitalize()} ({str(code)})/{str(year)}")
     r = requests.get(url)
-    print(url)
     
     
     html_page = r
@@ -138,11 +137,5 @@ def fileName():
     return fileName
 
 if __name__ == "__main__":
-
     test = scrape("igcse", "physics", "0625", "2020", "qp", "f/m")
-
-
-    # for t in range(len(test)):  
-    #     print(f"{test[t]}" + "\n") # Print in in new line
-    # arr = input("Select the number of the paper to download : ")
-    # download(arr)
+    print(test)
