@@ -10,6 +10,7 @@ Contains Modified parts of code taken from
 https://github.com/Dharisd/pastpaper-bot/blob/master/scrp.py (line 23 to 26)
 """
 allLinks = {}
+current_dir = os.getcwd()
 
 def Converter(exmType):
 
@@ -38,6 +39,7 @@ def scrape(exmType, subject, code, year, ptype, month):
     global url
     url = (f"https://papers.gceguide.com/{Converter(exmType)}/{subject.capitalize()} ({str(code)})/{str(year)}")
     r = requests.get(url)
+    print(url)
     
     
     html_page = r
@@ -68,7 +70,7 @@ def ms(month):
             if tag["href"].split("_")[2] == "ms" and tag["href"].split("_")[1][0] == "w": # ["0620", "w20", "ms", "12", "pdf"]
                 msarr.append(tag["href"])
     
-    enumeratedList = [] # To make it more easier to select the array number
+    enumeratedList = []
     enumeratedDict = {}
     for x in range(len(msarr)):
         enumerated = f"{msarr[x]}" 
@@ -76,8 +78,11 @@ def ms(month):
         id = x
         enumeratedDict[id] = enumeratedList[x]
     return enumeratedDict
+    # Returning a Dictionary because I found it impossible to 
+    # parse a List in discord messages without  it sending 
+    # each value in the list one by one so to make it possible. 
 
-    
+
 
 def qp(month):
     global qparr
@@ -96,7 +101,7 @@ def qp(month):
                 qparr.append(tag["href"])
 
 
-    enumeratedList = [] # To make it more easier to select the array number
+    enumeratedList = []
     enumeratedDict = {}
     for x in range(len(qparr)):
         enumerated = f"{qparr[x]}" 
@@ -104,31 +109,40 @@ def qp(month):
         id = x
         enumeratedDict[id] = enumeratedList[x]
     return enumeratedDict
+    # Returning a Dictionary because I found it impossible to 
+    # parse a List in discord messages without  it sending 
+    # each value in the list one by one so to make it possible. 
 
 def download(arrayNo):
     link = url + f"/{qparr[int(arrayNo)]}"
     global fileName
     fileName = qparr[int(arrayNo)]
     pdf = requests.get(link)
-    open(f"/home/d3crypt360/Desktop/Python/pastpaperdisc/pastdown/{fileName}", "wb").write(pdf.content)
+    open(f"{current_dir}/{fileName}", "wb").write(pdf.content)
+    # If you want to make it download to a directory of your choice
+    # remove {current_dir} and replace it with your directory
+    # eg: open(f"/home/d3crypt360/Downloads/{fileName}", "wb").write(pdf.content)
 
+
+    # NOTE: If you do change the directory in this function and
+    # you are using it for discord bot please do so in the delete() function below
+    # and don't forget to do it in the main.py as well 
+    # Otherwise it won't delete the file after uploading and will throw errors 
 
 def delete():
     time.sleep(60) # 1 Min because it usually takes 1 minute to download file in slow internet speeds
-    os.remove(f"/home/d3crypt360/Desktop/Python/pastpaperdisc/pastdown/{fileName}") # Deletes file
+    os.remove(f"{current_dir}/{fileName}") # Deletes file
     
-
-
   
 def fileName():
-
     return fileName
 
 if __name__ == "__main__":
-    test = scrape("igcse", "chemistry", "0620", "2020", "qp", "f/m")
+
+    test = scrape("igcse", "physics", "0625", "2020", "qp", "f/m")
 
 
-    for t in range(len(test)):  
-        print(f"{test[t]}" + "\n") # Print in in new line
-    arr = input("Select the number of the paper to download : ")
-    download(arr)
+    # for t in range(len(test)):  
+    #     print(f"{test[t]}" + "\n") # Print in in new line
+    # arr = input("Select the number of the paper to download : ")
+    # download(arr)
