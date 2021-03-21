@@ -6,7 +6,6 @@ current_dir = os.getcwd()
 # ["0620", "w20", "qp", "12", "pdf"]
 
 validPapers = [11,12,13,21,22,23,41,42,43,51,52,53,61,62,63]
-validExmTypes = ["igcse", "o levels", "a levels"]
 validPtypes = ["qp", "ms"]
 
 
@@ -29,6 +28,7 @@ def downloader(exmType, subject, subcode, month, year, ptype, pnum):
     """
     
     url = (f"https://papers.gceguide.com/{exmType}/{subject.capitalize()} ({str(subcode)})/{str(year)}/{str(subcode)}_{month}{year[2:]}_{ptype}_{pnum}.pdf")
+    print(url)
     r = requests.get(url)
     if r.status_code != 200:
         return "something went wrong try again"
@@ -42,14 +42,20 @@ if __name__ == "__main__":
     print()
     while True:
         while True:
-            
             exmType = input("Please enter the exam type of the paper you want! (supported): IGCSE, O Levels, A Levels -> ")
             print()
-            if exmType.lower() not in validExmTypes:
+            if exmType.lower() == "igcse":
+                exmType = "IGCSE"
+                break
+            elif exmType.lower() == "o levels":
+                exmType = "O Levels"
+                break
+            elif exmType.lower() == "a levels":
+                exmType = "A Levels"
+                break
+            else:
                 print("Invalid exam type selected! Try again")
                 print()
-            if exmType in validExmTypes:
-                break
 
         subject = input("So what subject of {} exam are you looking for? -> ".format(exmType.capitalize()))
         print()
@@ -103,7 +109,10 @@ if __name__ == "__main__":
             else:
                 break
 
-        downloader(exmType, subject, subcode, month, year, ptype, pnum)
-        print("Paper Downloaded! Thanks for using this tool, hope it saved you time :)")
-        print("exiting...")
-        exit(1)
+        down = downloader(exmType, subject, subcode, month, year, ptype, pnum)
+        if down == "something went wrong try again":
+            print("something went wrong try again")
+        else:
+            print("Paper Downloaded! Thanks for using this tool, hope it saved you time :)")
+            print("exiting...")
+            exit(1)
