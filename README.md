@@ -3,8 +3,9 @@ Saves time by downloading past papers you need from the command line and can be 
 
 Inspired by Dharsid's [Past Paper Telegram Bot](https://github.com/Dharisd/pastpaper-bot)
 
-CLI Tool is being reworked
+CLI Tool is Done
+Discord Bot is being reworked
 
 # Still in BETA phase
 
-# Documentation coming soon
+# DOCUMENTATION COMING SOON
