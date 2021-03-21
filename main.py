@@ -10,13 +10,12 @@ inspired by https://github.com/Dharisd/pastpaper-bot/ <- Telegram bot
 
 # Imports related to discord
 import discord
-from discord import message
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
-import json
-# Imports for Scraping
-from scraper import scrape, download, fileName, delete
+
+# Downloader
+from downloader import downloader
 
 # Token from .env file 
 load_dotenv(".env")
@@ -31,11 +30,8 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="$help | Doing Pastpapers |"))
     print('Bot Online!')
 
-
-
-@bot.command()
-async def pp(ctx):
-    await ctx.send("Welcome To The Past Paper Wizard :mage:", delete_after=30)
+"""
+await ctx.send("Welcome To The Past Paper Wizard :mage:", delete_after=30)
     user = ctx.message.author
     
     def check(message: discord.Message):
@@ -75,10 +71,11 @@ async def pp(ctx):
 
     download(arr.content)
     await ctx.send(file=discord.File(f"{current_dir}/{fileName()}"))
-    # Remove {current_dir} if you want to download to a custom directory
-    # Don't forget to change it in the scraper.py file as well
+"""
 
-    delete()
-
+@bot.command()
+async def pp(ctx):
+    pass
+    
 
 bot.run(os.getenv('DISCORD_TOKEN'))
