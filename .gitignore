@@ -1,4 +1,6 @@
 /venv
 /testing
+/pastdown
+/pastpaper_cli
 .env
 *__pycache__
