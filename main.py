@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+
+# Under construction
+
 """
 This is a discord bot which downloads
 past papers on command and sends to 
@@ -6,7 +10,7 @@ the channel
 saves time :)
 
 inspired by https://github.com/Dharisd/pastpaper-bot/ <- Telegram bot
-"""
+
 
 # Imports related to discord
 import discord
@@ -30,7 +34,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="$help | Doing Pastpapers |"))
     print('Bot Online!')
 
-"""
+
 await ctx.send("Welcome To The Past Paper Wizard :mage:", delete_after=30)
     user = ctx.message.author
     
