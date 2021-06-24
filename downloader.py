@@ -16,15 +16,15 @@ class Downloader:
 
 
     def pdfDown(self):
+        global url
         url = (f"https://papers.gceguide.com/{self.exmBoard}/{self.subject.capitalize()} ({str(self.subcode)})/{str(self.year)}/{str(self.subcode)}_{self.month}{self.year[2:]}_{self.ptype}_{self.pnum}.pdf")
         r = requests.get(url)
         if r.status_code != 200:
-            print(url) # debug
-            print("something went wrong try again")
-            exit(1)
+            raise ConnectionRefusedError("Invalid data passed!")
         else:
             fileName = url.split("/")[6]
             open(f"{current_dir}/{fileName}", "wb").write(r.content)
+            return fileName
 
 
 if __name__ == "__main__":
@@ -118,97 +118,99 @@ if __name__ == "__main__":
     down = Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype=ptype, pnum=pnum)
     down.pdfDown()
 
-    if ptype == "ms":
-        print("Would you like to download the Question Paper or the Insert for this paper aswell? [y/n]")
-        choice = input("> ")
-        if choice.lower() == "y":
-            print("""
-            Choose the paper type:
+    while True:
 
-            [1] Question Paper
-            [2] Insert
-            [3] Both
-            """)
+        if ptype == "ms":
+            print("Would you like to download the Question Paper or the Insert for this paper aswell? [y/n]")
+            choice = input("> ")
+            if choice.lower() == "y":
+                print("""
+                Choose the paper type:
 
-            opt = input("> ")
-            if opt == "1":
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="qp", pnum=pnum).pdfDown()
+                [1] Question Paper
+                [2] Insert
+                [3] Both
+                """)
 
-            elif opt == "2":
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ir", pnum=pnum).pdfDown()
+                opt = input("> ")
+                if opt == "1":
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="qp", pnum=pnum).pdfDown()
 
-            elif opt == "3":
-                # Probably a better way to do this? threading maybe. will check on that later
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="qp", pnum=pnum).pdfDown()
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ir", pnum=pnum).pdfDown()
-                
+                elif opt == "2":
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ir", pnum=pnum).pdfDown()
+
+                elif opt == "3":
+                    # Probably a better way to do this? threading maybe. will check on that later
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="qp", pnum=pnum).pdfDown()
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ir", pnum=pnum).pdfDown()
+                    
+
+                else:
+                    print("Option not available! Exiting...")
+                    exit(1)
 
             else:
-                print("Option not available! Exiting...")
+                print("Alright, Exiting.....")
                 exit(1)
 
-        else:
-            print("Alright, Exiting.....")
-            exit(1)
 
+        elif ptype == "qp":
+            print("Would you like to download the Marking Scheme or the Insert for this paper aswell? [y/n]")
+            choice = input("> ")
 
-    elif ptype == "qp":
-        print("Would you like to download the Marking Scheme or the Insert for this paper aswell? [y/n]")
-        choice = input("> ")
+            if choice.lower() == "y":
+                print("""
+                Choose the paper type:
 
-        if choice.lower() == "y":
-            print("""
-            Choose the paper type:
+                [1] Marking Scheme
+                [2] Insert
+                [3] Both
+                """)
 
-            [1] Marking Scheme
-            [2] Insert
-            [3] Both
-            """)
+                opt = input("> ")
+                if opt == "1":
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ms", pnum=pnum).pdfDown()
+                    
+                elif opt == "2":
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ir", pnum=pnum).pdfDown()
 
-            opt = input("> ")
-            if opt == "1":
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ms", pnum=pnum).pdfDown()
+                elif opt == "3":
+                    # Probably a better way to do this? threading maybe. will check on that later
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ms", pnum=pnum).pdfDown()
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ir", pnum=pnum).pdfDown()
                 
-            elif opt == "2":
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ir", pnum=pnum).pdfDown()
+                else:
+                    print("Option not available! Exiting...")
+                    exit(1)
 
-            elif opt == "3":
-                # Probably a better way to do this? threading maybe. will check on that later
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ms", pnum=pnum).pdfDown()
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ir", pnum=pnum).pdfDown()
-            
-            else:
-                print("Option not available! Exiting...")
-                exit(1)
+        elif ptype == "ir":
+            print("Would you like to download the Question Paper or the Marking Scheme for this paper aswell? [y/n]")
+            choice = input("> ")
 
-    elif ptype == "ir":
-        print("Would you like to download the Question Paper or the Marking Scheme for this paper aswell? [y/n]")
-        choice = input("> ")
+            if choice.lower() == "y":
+                print("""
+                Choose the paper type:
 
-        if choice.lower() == "y":
-            print("""
-            Choose the paper type:
+                [1] Question Paper
+                [2] Marking Scheme
+                [3] Both
+                """)
 
-            [1] Question Paper
-            [2] Marking Scheme
-            [3] Both
-            """)
+                opt = input("> ")
+                if opt == "1":
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="qp", pnum=pnum).pdfDown()
 
-            opt = input("> ")
-            if opt == "1":
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="qp", pnum=pnum).pdfDown()
-
-            elif opt == "2":
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ms", pnum=pnum).pdfDown()
-                
-            elif opt == "3":
-                # Probably a better way to do this? threading maybe. will check on that later
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="qp", pnum=pnum).pdfDown()
-                Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ms", pnum=pnum).pdfDown()           
-                
-            else:
-                print("Option not available! Exiting...")
-                exit(1)
+                elif opt == "2":
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ms", pnum=pnum).pdfDown()
+                    
+                elif opt == "3":
+                    # Probably a better way to do this? threading maybe. will check on that later
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="qp", pnum=pnum).pdfDown()
+                    Downloader(exmBoard=exmBoard, subject=subject, subcode=subcode, month=month, year=year, ptype="ms", pnum=pnum).pdfDown()           
+                    
+                else:
+                    print("Option not available! Exiting...")
+                    exit(1)
 
         else:
             print("Alright, Exiting.....")
