@@ -3,4 +3,4 @@
 /pastdown
 /pastpaper_cli
 .env
-*__pycache__
+/*__pycache__
